@@ -1,0 +1,20 @@
+@{
+    Layout = null; // Layout kullanmıyoruz
+}
+@{
+    ViewData["Title"] = "Admin Girişi";
+}
+
+<h2>Admin Girişi</h2>
+
+<form asp-controller="Account" asp-action="AdminLogin" method="post">
+    <div>
+        <label for="adminUsername">Kullanıcı Adı:</label>
+        <input type="text" id="adminUsername" name="adminUsername" required />
+    </div>
+    <div>
+        <label for="adminPassword">Şifre:</label>
+        <input type="password" id="adminPassword" name="adminPassword" required />
+    </div>
+    <button type="submit">Giriş Yap</button>
+</form>

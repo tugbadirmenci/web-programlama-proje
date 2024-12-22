@@ -1,0 +1,56 @@
+@{
+    Layout = null; // Layout kullanmıyoruz
+}
+
+@model IEnumerable<WebApplication1.Models.Hizmet>
+
+@{
+    ViewData["Title"] = "Hizmetler";
+}
+
+<div class="container mt-5">
+    <h2 class="text-center mb-4">Hizmetlerimiz</h2>
+    <p class="text-center text-muted">
+        Aşağıda yer alan hizmetlerimiz hakkında detaylı bilgi ve ücretlendirme tablomuza göz atabilirsiniz.
+    </p>
+
+    <div class="d-flex justify-content-center">
+        <table class="table table-bordered table-striped w-75 text-center">
+            <thead class="table-dark">
+                <tr>
+                    <th>Hizmet Adı</th>
+                    <th>Açıklama</th>
+                    <th>Ücret (₺)</th>
+                    <th>Süre (Dakika)</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var hizmet in Model)
+                {
+                    <tr>
+                        <td>@hizmet.HizmetAdi</td>
+                        <td>
+                            @switch(hizmet.HizmetAdi)
+                            {
+                                case "Saç Kesimi":
+                                    @:Profesyonel saç kesimi ile tarzınızı yenileyin.
+                                    break;
+                                case "Saç Boyama":
+                                    @:Doğal ve canlı renklerle saçlarınıza yepyeni bir görünüm kazandırın.
+                                    break;
+                                case "Manikür":
+                                    @:Ellerinize hak ettiği bakımı profesyonel manikür hizmetiyle sağlayın.
+                                    break;
+                                default:
+                                    @:sağlıklı güzel görünüm.
+                                    break;
+                            }
+                        </td>
+                        <td>₺@hizmet.Ucret</td>
+                        <td>@hizmet.Sure</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
