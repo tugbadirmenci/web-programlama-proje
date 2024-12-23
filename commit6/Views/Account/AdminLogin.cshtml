@@ -1,0 +1,27 @@
+@{
+    Layout = null; // Layout kullanmıyoruz
+}
+@{
+    ViewData["Title"] = "Admin Login";
+}
+
+<h2>Admin Girişi</h2>
+
+<form method="post">
+    <div class="form-group">
+        <label for="username">Kullanıcı Adı</label>
+        <input type="text" id="username" name="username" class="form-control" required />
+    </div>
+    <div class="form-group">
+        <label for="password">Şifre</label>
+        <input type="password" id="password" name="password" class="form-control" required />
+    </div>
+    <button type="submit" class="btn btn-primary">Giriş Yap</button>
+</form>
+
+@if (ViewData["ErrorMessage"] != null)
+{
+    <div class="alert alert-danger mt-3">
+        @ViewData["ErrorMessage"]
+    </div>
+}

@@ -1,0 +1,35 @@
+@{
+    Layout = null; // Layout kullanmıyoruz
+}
+@{
+    ViewData["Title"] = "Admin Paneli";
+}
+
+<!-- Navbar benzeri butonlar -->
+<div class="d-flex justify-content-center align-items-center bg-light py-3" style="position: sticky; top: 0; z-index: 10; box-shadow: 0px 2px 5px rgba(0,0,0,0.1);">
+    <button class="btn btn-primary mx-2" onclick="loadContent('PersonelIslemleri')">Personel İşlemleri</button>
+    <button class="btn btn-primary mx-2" onclick="loadContent('HizmetIslemleri')">Hizmet İşlemleri</button>
+    <button class="btn btn-primary mx-2" onclick="loadContent('RandevuIslemleri')">Randevu İşlemleri</button>
+    <button class="btn btn-primary mx-2" onclick="loadContent('KullaniciIslemleri')">Kullanıcı İşlemleri</button>
+</div>
+
+<!-- İçeriğin yükleneceği alan -->
+<div id="content" class="container mt-5">
+    <h2>Admin Paneline Hoşgeldiniz</h2>
+    <p>Buradan işlemleri gerçekleştirebilirsiniz.</p>
+</div>
+
+<script>
+    // İçerik yükleme fonksiyonu
+    function loadContent(action) {
+        fetch(`/Admin/${action}`) // İlgili action'a AJAX isteği
+            .then(response => {
+                if (!response.ok) throw new Error('Network response was not ok');
+                return response.text();
+            })
+            .then(html => {
+                document.getElementById('content').innerHTML = html; // İçeriği değiştir
+            })
+            .catch(error => console.error('Error loading content:', error));
+    }
+</script>
