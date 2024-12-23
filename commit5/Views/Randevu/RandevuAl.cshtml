@@ -1,0 +1,149 @@
+@{
+    Layout = null; // Layout kullanmıyoruz
+}
+
+@model WebApplication1.Models.Randevu
+
+@{
+    var hizmetler = ViewData["Hizmetler"] as SelectList;  // SelectList türüyle alınmalı
+    var personeller = ViewData["Personeller"] as SelectList;  // SelectList türüyle alınmalı
+
+    if (hizmetler == null || personeller == null)
+    {
+        <p>Hizmetler veya personeller yüklenemedi!</p>
+    }
+}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Randevu Al</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f9;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+
+        .randevu-container {
+            background: #ffffff;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            max-width: 500px;
+        }
+
+        h2 {
+            text-align: center;
+            color: #333;
+            margin-bottom: 20px;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: bold;
+            color: #555;
+        }
+
+        .form-group input,
+        .form-group select {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 14px;
+        }
+
+        .form-group input:focus,
+        .form-group select:focus {
+            border-color: #ffbde1;
+            outline: none;
+            box-shadow: 0 0 5px rgba(255, 187, 240, 0.5);
+        }
+
+        .btn-primary {
+            display: block;
+            width: 100%;
+            padding: 12px;
+            background-color: #f52da2;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            font-size: 16px;
+            cursor: pointer;
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        .btn-primary:hover {
+            background-color: #ff57b3;
+        }
+    </style>
+</head>
+<body>
+    <div class="randevu-container">
+        <h2>Randevu Al</h2>
+        <form method="post">
+            <div class="form-group">
+                <label for="Ad">Ad:</label>
+                <input type="text" id="Ad" name="Ad" required />
+            </div>
+
+            <div class="form-group">
+                <label for="Soyad">Soyad:</label>
+                <input type="text" id="Soyad" name="Soyad" required />
+            </div>
+
+            <div class="form-group">
+                <label for="TelNo">Telefon Numarası:</label>
+                <input type="tel" id="TelNo" name="TelNo" required />
+            </div>
+
+            <div class="form-group">
+                <label for="HizmetID">Yapılacak İşlem:</label>
+                <select class="form-control" id="HizmetID" name="HizmetID" required>
+                    @if (hizmetler != null)
+                    {
+                        @foreach (var hizmet in hizmetler)
+                        {
+                            <option value="@hizmet.Value">@hizmet.Text</option>  <!-- Değer ve metin burada doğru şekilde bağlanmalı -->
+                        }
+                    }
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label for="PersonelID">Personel:</label>
+                <select class="form-control" id="PersonelID" name="PersonelID" required>
+                    @if (personeller != null)
+                    {
+                        @foreach (var personel in personeller)
+                        {
+                            <option value="@personel.Value">@personel.Text</option>  <!-- Değer ve metin burada doğru şekilde bağlanmalı -->
+                        }
+                    }
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label for="RandevuTarihi">Randevu Tarihi ve Saati:</label>
+                <input type="datetime-local" id="RandevuTarihi" name="RandevuTarihi" required />
+            </div>
+
+            <button type="submit" class="btn-primary">Randevu Al</button>
+        </form>
+    </div>
+</body>
+</html>
