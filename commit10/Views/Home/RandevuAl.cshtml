@@ -1,0 +1,187 @@
+@{
+    Layout = null; // Layout kullanmıyoruz
+}
+
+@model WebApplication1.Models.Randevu
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Randevu Al</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f9;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+
+        .randevu-container {
+            background: #ffffff;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            max-width: 500px;
+        }
+
+        h2 {
+            text-align: center;
+            color: #333;
+            margin-bottom: 20px;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: bold;
+            color: #555;
+        }
+
+        .form-group input,
+        .form-group select {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 14px;
+        }
+
+        .form-group input:focus,
+        .form-group select:focus {
+            border-color: #ffbde1;
+            outline: none;
+            box-shadow: 0 0 5px rgba(255, 187, 240, 0.5);
+        }
+
+        .btn-primary {
+            display: block;
+            width: 100%;
+            padding: 12px;
+            background-color: #f52da2;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            font-size: 16px;
+            cursor: pointer;
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        .btn-primary:hover {
+            background-color: #ff57b3;
+        }
+    </style>
+</head>
+<script>
+    
+
+    document.addEventListener('DOMContentLoaded', () => {
+    // Hizmetleri Doldurma
+    fetch('/api/Personel/hizmetler', { method: 'GET' })
+        .then(response => response.text())  // Raw response al
+        .then(text => {
+            try {
+                const data = JSON.parse(text);  // JSON'a dönüştürmeyi deneyin
+                const islemDropdown = document.getElementById('HizmetID');
+                data.forEach(hizmet => {
+                    const option = document.createElement('option');
+                    option.value = hizmet.HizmetID; // ID
+                    option.text = hizmet.HizmetAdi; // Adı
+                    islemDropdown.add(option);
+                });
+            } catch (err) {
+                console.error('Hizmet API hatası:', err);
+                console.log("Yanıt: ", text);  // Yanıtın ne olduğunu görmek için
+            }
+        })
+        .catch(err => console.error('Hizmet API hatası:', err));
+
+    // Personelleri Doldurma
+    fetch('/api/Personel/personeller', { method: 'GET' })
+        .then(response => response.text())  // Raw response al
+        .then(text => {
+            try {
+                const data = JSON.parse(text);  // JSON'a dönüştürmeyi deneyin
+                const personelDropdown = document.getElementById('PersonelID');
+                data.forEach(personel => {
+                    const option = document.createElement('option');
+                    option.value = personel.PersonelID; // ID
+                    option.text = personel.AdSoyad; // Ad Soyad
+                    personelDropdown.add(option);
+                });
+            } catch (err) {
+                console.error('Personel API hatası:', err);
+                console.log("Yanıt: ", text);  // Yanıtın ne olduğunu görmek için
+            }
+        })
+        .catch(err => console.error('Personel API hatası:', err));
+});
+
+
+</script>
+<body>
+    <div class="randevu-container">
+        <h2>Randevu Al</h2>
+        <form method="post">
+            <div class="form-group">
+                <label for="AdSoyad">Ad Soyad:</label>
+                <input type="text" id="AdSoyad" name="AdSoyad" required />
+            </div>
+
+            <div class="form-group">
+                <label for="TelNo">Telefon Numarası:</label>
+                <input type="tel" id="TelNo" name="TelNo" required />
+            </div>
+
+  <!-- Hizmet Dropdown -->
+            <div class="form-group">
+                <label for="HizmetID">Yapılacak İşlem:</label>
+                <select class="form-control" id="HizmetID" name="HizmetID" required>
+                    @if (ViewData["Hizmet"] is SelectList hizmetler)
+                    {
+                        foreach (var hizmet in hizmetler)
+                        {
+                            <option value="@hizmet.Value">@hizmet.Text</option>
+                        }
+                    }
+                </select>
+            </div>
+
+            <!-- Personel Dropdown -->
+            <div class="form-group">
+                <label for="PersonelID">Personel:</label>
+                <select class="form-control" id="PersonelID" name="PersonelID" required>
+                    @if (ViewData["Personel"] is SelectList personeller)
+                    {
+                        foreach (var personel in personeller)
+                        {
+                            <option value="@personel.Value">@personel.Text</option>
+                        }
+                    }
+                </select>
+            </div>
+
+
+
+            <div class="form-group">
+                <label for="RandevuTarihi">Randevu Tarihi ve Saati:</label>
+                <input type="datetime-local" id="RandevuTarihi" name="RandevuTarihi" required />
+            </div>
+
+            <button type="submit" class="btn-primary">Randevu Al</button>
+        </form>
+    </div>
+</body>
+</html>

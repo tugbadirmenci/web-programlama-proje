@@ -1,0 +1,38 @@
+@model IEnumerable<WebApplication1.Models.Randevu>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>#</th>
+            <th>Kullanıcı</th>
+            <th>Hizmet</th>
+            <th>Personel</th>
+            <th>Tarih</th>
+            <th>Durum</th>
+            <th>İşlemler</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var randevu in Model)
+        {
+            <tr>
+                <td>@randevu.RandevuID</td>
+                <td>@randevu.Kullanici?.Ad</td>
+                <td>@randevu.Hizmet?HizmetAdi</td>
+                <td>@randevu.Personel?.PersonelID </td>
+                <td>@randevu.Tarih.ToString("dd/MM/yyyy HH:mm")</td>
+                <td>@randevu.Status</td>
+                <td>
+                    <form asp-action="Onayla" method="post" style="display:inline;">
+                        <input type="hidden" name="id" value="@randevu.RandevuID" />
+                        <button class="btn btn-success btn-sm">Onayla</button>
+                    </form>
+                    <form asp-action="Reddet" method="post" style="display:inline;">
+                        <input type="hidden" name="id" value="@randevu.RandevuID" />
+                        <button class="btn btn-danger btn-sm">Reddet</button>
+                    </form>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

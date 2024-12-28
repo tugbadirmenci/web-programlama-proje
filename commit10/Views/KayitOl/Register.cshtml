@@ -1,0 +1,76 @@
+@{
+    Layout = null; // Layout kullanmıyoruz
+}
+
+@model WebApplication1.Models.KullaniciViewModel
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kayıt Ol</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+    <style>
+        body {
+            background-color: #f0f8ff; /* Hafif mavi arka plan */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+
+        .form-container {
+            background-color: #ffffff; /* Beyaz kutu */
+            padding: 40px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            max-width: 400px;
+            width: 100%;
+        }
+
+        h2 {
+            text-align: center;
+            margin-bottom: 20px;
+            color: #333333;
+        }
+
+        .btn-primary {
+            width: 100%; /* Butonu tam genişlikte yapar */
+            padding: 10px; /* Buton boyutunu artırır */
+            font-size: 18px; /* Yazı boyutunu büyütür */
+        }
+
+        .form-control {
+            font-size: 16px; /* Giriş kutularının yazı boyutunu artırır */
+        }
+    </style>
+</head>
+<body>
+    <div class="form-container">
+        <h2>Kayıt Ol</h2>
+        <form asp-action="Register" method="post">
+            <div class="form-group mb-3">
+                <label for="Ad">Ad</label>
+                <input type="text" id="Ad" name="Ad" class="form-control" required />
+            </div>
+            <div class="form-group mb-3">
+                <label for="Soyad">Soyad</label>
+                <input type="text" id="Soyad" name="Soyad" class="form-control" required />
+            </div>
+            <div class="form-group mb-3">
+                <label for="Email">Email</label>
+                <input type="email" id="Email" name="Email" class="form-control" required />
+            </div>
+            <div class="form-group mb-4">
+                <label for="Sifre">Şifre</label>
+                <input type="password" id="Sifre" name="Sifre" class="form-control" required />
+            </div>
+            <button type="submit" class="btn btn-primary">Kayıt Ol</button>
+        </form>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

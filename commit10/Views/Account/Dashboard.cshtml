@@ -1,0 +1,237 @@
+@{
+    Layout = null;
+}
+
+<div class="container mt-5 d-flex flex-column align-items-center justify-content-center">
+    <!-- Navbar -->
+    <div class="mb-4 text-center">
+        <button class="btn btn-lg btn-primary mx-2" onclick="loadSection('personel')">Personel İşlemleri</button>
+        <button class="btn btn-lg btn-primary mx-2" onclick="loadSection('hizmet')">Hizmet İşlemleri</button>
+        <button class="btn btn-lg btn-primary mx-2" onclick="loadSection('randevu')">Randevu İşlemleri</button>
+    </div>
+
+    <!-- İçerik Alanı -->
+    <div id="content" class="mt-4 w-75 text-center">
+        <h3>Dashboard'a Hoşgeldiniz</h3>
+    </div>
+</div>
+
+<style>
+    body {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        min-height: 100vh;
+        margin: 0;
+        background-color: #f8f9fa;
+    }
+
+    .container {
+        background: #ffffff;
+        padding: 20px;
+        border-radius: 10px;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    }
+
+    button {
+        width: 200px;
+        height: 60px;
+        font-size: 1.2rem;
+    }
+
+    table {
+        width: 100%;
+        margin-top: 20px;
+        border-collapse: collapse;
+    }
+
+    table, th, td {
+        border: 1px solid #ddd;
+    }
+
+    th, td {
+        padding: 10px;
+        text-align: center;
+    }
+
+    th {
+        background-color: #007bff;
+        color: white;
+    }
+</style>
+
+<script>
+    function loadSection(type) {
+        const content = document.getElementById('content');
+        if (type === 'personel') {
+            content.innerHTML = `
+                <h3>Personel İşlemleri</h3>
+                <form id="personelForm" class="mb-3">
+                    <input type="text" id="adSoyad" placeholder="Ad Soyad" class="form-control mb-2" required>
+                    <input type="text" id="uzmanlik" placeholder="Uzmanlık" class="form-control mb-2">
+                    <button type="submit" class="btn btn-success">Ekle</button>
+                </form>
+                <table id="personelTable" class="table">
+                    <thead>
+                        <tr>
+                            <th>Ad Soyad</th>
+                            <th>Uzmanlık</th>
+                            <th>Durum</th>
+                            <th>Aksiyon</th>
+                        </tr>
+                    </thead>
+                    <tbody></tbody>
+                </table>
+            `;
+            setupPersonelHandlers();
+        } else if (type === 'hizmet') {
+            content.innerHTML = `
+                <h3>Hizmet İşlemleri</h3>
+                <form id="hizmetForm" class="mb-3">
+                    <input type="text" id="hizmetAdi" placeholder="Hizmet Adı" class="form-control mb-2" required>
+                    <input type="number" id="ucret" placeholder="Ücret" class="form-control mb-2" required>
+                    <input type="number" id="sure" placeholder="Süre (dk)" class="form-control mb-2" required>
+                    <button type="submit" class="btn btn-success">Ekle</button>
+                </form>
+                <table id="hizmetTable" class="table">
+                    <thead>
+                        <tr>
+                            <th>Ad</th>
+                            <th>Ücret</th>
+                            <th>Süre</th>
+                            <th>Aksiyon</th>
+                        </tr>
+                    </thead>
+                    <tbody></tbody>
+                </table>
+            `;
+            setupHizmetHandlers();
+        } else if (type === 'randevu') {
+            content.innerHTML = `
+                <h3>Randevu İşlemleri</h3>
+                <table id="randevuTable" class="table">
+                    <thead>
+                        <tr>
+                            <th>Randevu Tarihi</th>
+                            <th>Müşteri Adı</th>
+                            <th>Hizmet Adı</th>
+                            <th>Durum</th>
+                        </tr>
+                    </thead>
+                    <tbody></tbody>
+                </table>
+            `;
+            loadRandevuData();
+        }
+    }
+
+    function setupPersonelHandlers() {
+        const form = document.getElementById('personelForm');
+        const tbody = document.getElementById('personelTable').querySelector('tbody');
+
+        form.onsubmit = async (e) => {
+            e.preventDefault();
+            const personel = {
+                adSoyad: document.getElementById('adSoyad').value,
+                uzmanlikAlani: document.getElementById('uzmanlik').value,
+                musaitlikDurumu: true
+            };
+
+            const res = await fetch('/Admin/EklePersonel', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(personel)
+            });
+
+            const data = await res.json();
+
+            tbody.innerHTML += `<tr>
+                <td>${data.adSoyad}</td>
+                <td>${data.uzmanlikAlani}</td>
+                <td>${data.musaitlikDurumu ? 'Müsait' : 'Meşgul'}</td>
+                <td><button class="btn btn-danger" onclick="silPersonel(${data.personelID})">Sil</button></td>
+            `;
+        };
+
+        fetch('/Admin/GetPersoneller')
+            .then(res => res.json())
+            .then(data => {
+                data.forEach(p => {
+                    tbody.innerHTML += `<tr>
+                        <td>${p.adSoyad}</td>
+                        <td>${p.uzmanlikAlani}</td>
+                        <td>${p.musaitlikDurumu ? 'Müsait' : 'Meşgul'}</td>
+                        <td><button class="btn btn-danger" onclick="silPersonel(${p.personelID})">Sil</button></td>
+                    `;
+                });
+            });
+    }
+
+    async function silPersonel(id) {
+        await fetch(`/Admin/SilPersonel?id=${id}`, { method: 'POST' });
+        loadSection('personel');
+    }
+
+    function setupHizmetHandlers() {
+        const form = document.getElementById('hizmetForm');
+        const tbody = document.getElementById('hizmetTable').querySelector('tbody');
+
+        form.onsubmit = async (e) => {
+            e.preventDefault();
+            const hizmet = {
+                hizmetAdi: document.getElementById('hizmetAdi').value,
+                ucret: document.getElementById('ucret').value,
+                sure: document.getElementById('sure').value
+            };
+
+            const res = await fetch('/Admin/EkleHizmet', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(hizmet)
+            });
+
+            const data = await res.json();
+
+            tbody.innerHTML += `<tr>
+                <td>${data.hizmetAdi}</td>
+                <td>${data.ucret}</td>
+                <td>${data.sure}</td>
+                <td><button class="btn btn-danger" onclick="silHizmet(${data.hizmetID})">Sil</button></td>
+            `;
+        };
+
+        fetch('/Admin/GetHizmetler')
+            .then(res => res.json())
+            .then(data => {
+                data.forEach(h => {
+                    tbody.innerHTML += `<tr>
+                        <td>${h.hizmetAdi}</td>
+                        <td>${h.ucret}</td>
+                        <td>${h.sure}</td>
+                        <td><button class="btn btn-danger" onclick="silHizmet(${h.hizmetID})">Sil</button></td>
+                    `;
+                });
+            });
+    }
+
+    async function silHizmet(id) {
+        await fetch(`/Admin/SilHizmet?id=${id}`, { method: 'POST' });
+        loadSection('hizmet');
+    }
+
+    function loadRandevuData() {
+        const tbody = document.getElementById('randevuTable').querySelector('tbody');
+        fetch('/Admin/GetRandevular')
+            .then(res => res.json())
+            .then(data => {
+                data.forEach(r => {
+                    tbody.innerHTML += `<tr>
+                        <td>${r.randevuTarihi}</td>
+                        <td>${r.musteriAdi}</td>
+                        <td>${r.hizmetAdi}</td>
+                        <td>${r.durum}</td>
+                    </tr>`;
+                });
+            });
+    }
+</script>

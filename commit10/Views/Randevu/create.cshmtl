@@ -1,0 +1,35 @@
+@model WebApplication1.Models.Randevu
+
+@{
+    ViewData["Title"] = "Randevu Al";
+}
+
+<h2>@ViewData["Title"]</h2>
+
+<form asp-action="Create" method="post">
+    <div class="form-group">
+        <label for="PersonelID">Personel:</label>
+        <select id="PersonelID" name="PersonelID" class="form-control">
+            <option value="">Seçiniz</option>
+            @foreach (var personel in ViewData["Personeller"] as SelectList)
+            {
+                <option value="@personel.Value">@personel.Text</option>
+            }
+        </select>
+    </div>
+    <div class="form-group">
+        <label for="HizmetID">Hizmet:</label>
+        <select id="HizmetID" name="HizmetID" class="form-control">
+            <option value="">Seçiniz</option>
+            @foreach (var hizmet in ViewData["Hizmetler"] as SelectList)
+            {
+                <option value="@hizmet.Value">@hizmet.Text</option>
+            }
+        </select>
+    </div>
+    <div class="form-group">
+        <label for="RandevuTarihi">Randevu Tarihi:</label>
+        <input type="datetime-local" id="RandevuTarihi" name="RandevuTarihi" class="form-control" required />
+    </div>
+    <button type="submit" class="btn btn-primary">Randevu Al</button>
+</form>

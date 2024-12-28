@@ -1,0 +1,88 @@
+body {
+  font-family: Arial, sans-serif;
+  margin: 0;
+  padding: 0;
+  background-color: #f4f4f9;
+}
+
+header {
+  background: #ffffff;
+  color: #fff;
+  padding: 10px 20px;
+  text-align: center;
+}
+
+header h1 {
+  margin: 0;
+  font-size: 2rem;
+}
+
+nav {
+  background: #f7dada;
+  color: #fff;
+  text-align: center;
+  padding: 10px 0;
+}
+
+nav a {
+  color: #fff;
+  text-decoration: none;
+  margin: 0 15px;
+}
+
+nav a:hover {
+  text-decoration: underline;
+}
+
+.container {
+  max-width: 960px;
+  margin: 20px auto;
+  padding: 20px;
+  background: #fff;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+h2 {
+  color: #ad7b9e;
+  margin-top: 0;
+}
+.hero {
+    position: relative; /* Overlay'in doğru yerleşmesini sağlar */
+    background: url('/img/foto1.jpg') no-repeat center center;
+    background-size: cover;
+    height: 400px;
+    color: #fff; /* Yazı rengi beyaz */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+}
+
+.hero::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(255, 255, 255, 0.315); /* Siyah arka plan, %50 opaklık */
+    z-index: 1;
+}
+
+.hero h1 {
+    position: relative; /* Overlay'in altında kalmaması için */
+    z-index: 2;
+    font-size: 2.5rem; /* Yazı büyüklüğü */
+    margin: 0;
+}
+
+/*footer {
+  text-align: center;
+  padding: 10px 0;
+  background: #333;
+  color: #fff;
+  position: fixed;
+  bottom: 0;
+  width: 100%;
+}*/
